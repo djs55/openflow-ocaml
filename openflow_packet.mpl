@@ -109,9 +109,11 @@ packet openflow {
 		| 13:"PACKET_OUT" ->
 			buffer_id: uint32;
 			in_port: uint16;
-			actions_len: uint16 values(offset(actions_end)-offset(actions_end));
+			actions_len: uint16 value(offset(actions_end)-offset(actions_start));
+			actions_start: label;
 			actions: byte[actions_len];
-			/* XXX */]
+			actions_end: label;
+			/* XXX */
 		| 14:"FLOW_MOD" ->
 			ofp_match: byte[40]; /* openflow_match */
 			cookie: uint64;
@@ -125,7 +127,7 @@ packet openflow {
 			ofp_flow_mod_header_end: label;
 
 			data: byte[length - offset(ofp_flow_mod_header_end)];
-		| 15:"PORT_MOD" ->
+/* 		| 15:"PORT_MOD" -> */
 		| 16:"STATS_REQUEST" ->
 			req_ty: uint16 variant {
 				| 0 -> DESCR
