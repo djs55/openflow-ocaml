@@ -9,15 +9,45 @@ packet openflow {
 		| 0:"HELLO" ->
 			data: byte[length - offset(ofp_header_end)];
 		| 1:"ERROR" ->
-			error_type: uint16 variant {
-				| 0 -> HELLO_FAILED
-				| 1 -> BAD_REQUEST
-				| 2 -> BAD_ACTION
-				| 3 -> FLOW_MOD_FAILED
-				| 4 -> PORT_MOD_FAILED
-				| 5 -> QUEUE_OP_FAILED
+			error: uint32 variant {
+				/* HELLO */
+				| 0x00000000 -> HELLO_INCOMPATIBLE
+				| 0x00000001 -> HELLO_EPERM
+				/* REQUEST */
+				| 0x00010000 -> REQUEST_BAD_VERSION
+				| 0x00010001 -> REQUEST_BAD_TYPE
+				| 0x00010002 -> REQUEST_BAD_STAT
+				| 0x00010003 -> REQUEST_BAD_VENDOR
+				| 0x00010004 -> REQUEST_BAD_SUBTYPE
+				| 0x00010005 -> REQUEST_REQUEST_EPERM
+				| 0x00010006 -> REQUEST_BAD_LEN
+				| 0x00010007 -> REQUEST_BUFFER_EMPTY
+				| 0x00010008 -> REQUEST_BUFFER_UNKNOWN
+				/* ACTION */
+				| 0x00020000 -> ACTION_BAD_TYPE
+				| 0x00020001 -> ACTION_BAD_LEN
+				| 0x00020002 -> ACTION_BAD_VENDOR
+				| 0x00020003 -> ACTION_BAD_VENDOR_TYPE
+				| 0x00020004 -> ACTION_BAD_OUT_PORT
+				| 0x00020005 -> ACTION_BAD_ARGUMENT
+				| 0x00020006 -> ACTION_EPERM
+				| 0x00020007 -> ACTION_TOO_MANY
+				| 0x00020008 -> ACTION_BAD_QUEUE
+				/* FLOW_MOD */
+				| 0x00030000 -> FLOW_MOD_ALL_TABLES_FULL
+				| 0x00030001 -> FLOW_MOD_OVERLAP
+				| 0x00030002 -> FLOW_MOD_EPERM
+				| 0x00030003 -> FLOW_MOD_EMERG_TIMEOUT
+				| 0x00030004 -> FLOW_MOD_BAD_COMMAND
+				| 0x00030004 -> FLOW_MOD_UNSUPPORTED
+				/* PORT_MOD */
+				| 0x00040000 -> PORT_MOD_BAD_PORT
+				| 0x00040001 -> PORT_MOD_BAD_HW_ADDR
+				/* QUEUE_OP */
+				| 0x00050000 -> QUEUE_OP_BAD_PORT
+				| 0x00050001 -> QUEUE_OP_BAD_QUEUE
+				| 0x00050002 -> QUEUE_OP_EPERM	
 			};
-			error_code: uint16;
 			ofp_error_msg_end: label;
 
 			data: byte[length - offset(ofp_error_msg_end)];
