@@ -18,7 +18,10 @@ test: openflow_packet.cmx openflow_phy_port.cmx openflow_phy_port_feature.cmx op
 test.cmx: openflow_packet.cmi openflow_phy_port.cmi openflow_phy_port_feature.cmi openflow_desc_stats.cmi openflow_match.cmi test.ml
 
 %.ml: %.mpl
-	$(MPLC) $< > $@
+	cpp $< $<.2
+	cat $<.2 | grep -v '^#' > $<.3
+	$(MPLC) $<.3 > $@
+	rm -f $<.2 $<.3
 
 %.mli: %.ml
 	$(OCAMLC) -i $< > $@ 
@@ -39,4 +42,4 @@ META: META.in
 	sed 's/@VERSION@/$(VERSION)/g' < $< > $@
 
 clean:
-	rm -f *.o *.so *.a *.cmo *.cmi *.cma *.cmx *.cmxa *.annot $(LIBS) $(PROGRAMS)
+	rm -f *.o *.so *.a *.cmo *.cmi *.cma *.cmx *.cmxa *.annot $(LIBS) $(PROGRAMS) *.2 *.3
