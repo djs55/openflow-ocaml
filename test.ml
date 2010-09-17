@@ -13,31 +13,6 @@ let with_switch name f =
 	)
     	(fun () -> Unix.close fd)
 
-(* enum ofp_port, p18 *)
-module Port = struct
-	type t = 
-	| Physical of int32
-	| In_port (* Send the packet out the input port *)
-	| Table (* Perform actions in flow table (packet-out messages only) *)
-	| Normal (* normal L2/L3 switching *)
-	| Flood (* All physical ports except input and any STP-disabled *)
-	| All (* All physical ports except input *)
-	| Controller (* Send to controller *)
-	| Local (* Local openflow "port" *)
-	| NoPort (* Not associated with a physical port *)
-
-	let enum = [ 0xfff8l, In_port; 0xfff9l, Table; 0xfffal, Normal;
-	             0xfffbl, Flood; 0xfffcl, All; 0xfffdl, Controller;
-	             0xfffel, Local; 0xffffl, NoPort ]
-	let enum' = List.map (fun (x, y) -> y, x) enum
-	let keys = List.map fst enum
-	let of_int32 x = if List.mem x keys then List.assoc x enum else (Physical x)
-	let to_int32 = function
-	| Physical x -> assert (not (List.mem x keys)); x
-	| x -> List.assoc x enum'
-end
-
-
 
 let hello env = 
 	let (_: HELLO.o) = HELLO.t ~version:1 ~xid:0l ~data:(`Str "") env in ()

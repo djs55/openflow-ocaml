@@ -1,3 +1,18 @@
+/* OFP_PORT is a common 'type'. Note that Unknown values represent real
+   ports */
+#define OFP_PORT(x) x : uint16 variant { \
+	| 0xff00 -> MAX \
+	| 0xfff8 -> IN_PORT \
+	| 0xfff9 -> TABLE \
+	| 0xfffa -> NORMAL \
+	| 0xfffb -> FLOOD \
+	| 0xfffc -> ALL \
+	| 0xfffd -> CONTROLLER \
+	| 0xfffe -> LOCAL \
+	| 0xffff -> NONE \
+}
+
+
 packet openflow {
 	version: byte;
 	ty: byte;
@@ -102,7 +117,7 @@ packet openflow {
 		| 10:"PACKET_IN" ->
 			buffer_id: uint32;
 			total_len: uint16;
-			in_port: uint16;
+			OFP_PORT(in_port);
 			reason: byte variant {
 				| 0 -> NO_MATCH
 				| 1 -> ACTION
@@ -138,7 +153,7 @@ packet openflow {
 			phy_port: byte[length - offset(ofp_port_status_header_end)];
 		| 13:"PACKET_OUT" ->
 			buffer_id: uint32;
-			in_port: uint16;
+			OFP_PORT(in_port);
 			actions_len: uint16 value(offset(actions_end)-offset(actions_start));
 			actions_start: label;
 			actions: byte[actions_len];
@@ -152,7 +167,7 @@ packet openflow {
 			hard_timeout: uint16;
 			priority: uint16;
 			buffer_id: uint32;
-			out_port: uint16;
+			OFP_PORT(out_port);
 			flags: uint16;
 			ofp_flow_mod_header_end: label;
 
