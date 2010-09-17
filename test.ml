@@ -60,23 +60,21 @@ let stats_request env =
 let features_reply x = match x with 
 |`FEATURES_REPLY o ->
 	FEATURES_REPLY.prettyprint o;
-	let phy_ports_env = o#data_env in
-	while M.remaining phy_ports_env > 0 do
-		(* XXX: bad pattern: unmarshal respects base but ignores pos? *)
-		let env = M.env_at phy_ports_env (M.curpos phy_ports_env) (M.size phy_ports_env) in
-		let o = Openflow_phy_port.unmarshal env in
-		M.skip phy_ports_env (M.curpos env);
-		Openflow_phy_port.prettyprint o;
-		List.iter
-		(fun (name, features_env) ->
-			let o' = Openflow_phy_port_feature.unmarshal features_env in
-			Printf.printf "%s features:\n" name; flush stdout;
-			Openflow_phy_port_feature.prettyprint o'
-		) [ "curr", o#curr_env;
-		    "advertised", o#advertised_env;
-		    "supported", o#supported_env;
-		    "peer", o#peer_env ]
-	done
+	M.fold_env o#data_env
+		(fun env () ->
+			let o = Openflow_phy_port.unmarshal env in
+			Openflow_phy_port.prettyprint o;
+			List.iter
+				(fun (name, features_env) ->
+				let o' = Openflow_phy_port_feature.unmarshal features_env in
+				Printf.printf "%s features:\n" name; flush stdout;
+				Openflow_phy_port_feature.prettyprint o'
+			) [ 
+			"curr", o#curr_env;
+		    	"advertised", o#advertised_env;
+		    	"supported", o#supported_env;
+		    	"peer", o#peer_env ]) ()
+
 | _ -> failwith "Not a FEATURES_REPLY"
 
 let stats_reply x = match x with 
