@@ -1,3 +1,5 @@
+#include "openflow_port_config.mpl"
+
 /* OFP_PORT is a common 'type'. Note that Unknown values represent real
    ports */
 #define OFP_PORT(x) x : uint16 variant { \
@@ -172,7 +174,13 @@ packet openflow {
 			ofp_flow_mod_header_end: label;
 
 			data: byte[length - offset(ofp_flow_mod_header_end)];
-/* 		| 15:"PORT_MOD" -> */
+ 		| 15:"PORT_MOD" ->
+			OFP_PORT(port_no);
+			hw_addr: byte[6];
+			OFP_PORT_CONFIG(config);
+			OFP_PORT_CONFIG(mask);
+			advertise: uint32; /* ofp_port_feature */
+			_pad: uint32;
 		| 16:"STATS_REQUEST" ->
 			req_ty: uint16 variant {
 				| 0 -> DESCR

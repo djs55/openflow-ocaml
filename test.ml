@@ -39,16 +39,7 @@ let features_reply x = match x with
 		(fun env () ->
 			let o = Openflow_phy_port.unmarshal env in
 			Openflow_phy_port.prettyprint o;
-			List.iter
-				(fun (name, features_env) ->
-				let o' = Openflow_phy_port_feature.unmarshal features_env in
-				Printf.printf "%s features:\n" name; flush stdout;
-				Openflow_phy_port_feature.prettyprint o'
-			) [ 
-			"curr", o#curr_env;
-		    	"advertised", o#advertised_env;
-		    	"supported", o#supported_env;
-		    	"peer", o#peer_env ]) ()
+		) ()
 
 | _ -> failwith "Not a FEATURES_REPLY"
 

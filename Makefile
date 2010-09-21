@@ -12,10 +12,10 @@ bins: $(PROGRAMS)
 
 libs: $(LIBS)
 
-test: openflow_packet.cmx openflow_phy_port.cmx openflow_phy_port_feature.cmx openflow_desc_stats.cmx openflow_match.cmx test.cmx
-	$(OCAMLOPT) -linkpkg -o test openflow_packet.cmx openflow_phy_port.cmx openflow_phy_port_feature.cmx openflow_desc_stats.cmx openflow_match.cmx test.cmx
+test: openflow_packet.cmx openflow_phy_port.cmx openflow_desc_stats.cmx openflow_match.cmx test.cmx
+	$(OCAMLOPT) -linkpkg -o test openflow_packet.cmx openflow_phy_port.cmx openflow_desc_stats.cmx openflow_match.cmx test.cmx
 
-test.cmx: openflow_packet.cmi openflow_phy_port.cmi openflow_phy_port_feature.cmi openflow_desc_stats.cmi openflow_match.cmi test.ml
+test.cmx: openflow_packet.cmi openflow_phy_port.cmi openflow_desc_stats.cmi openflow_match.cmi test.ml
 
 %.ml: %.mpl
 	cpp $< $<.2
