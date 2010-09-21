@@ -207,6 +207,19 @@ packet openflow {
 			more_to_follow: bit[1];
 			ofp_stats_reply_header_end: label;
 			data: byte[length - offset(ofp_stats_reply_header_end)];
+		| 18:"BARRIER_REQUEST" ->
+			();
+		| 19:"BARRIER_REPLY" ->
+			();
+		| 20:"QUEUE_GET_CONFIG_REQUEST" ->
+			OFP_PORT(port);
+			_pad: uint16;
+		| 21:"QUEUE_GET_CONFIG_REPLY" ->
+			OFP_PORT(port);
+			_pad: byte[6];
+			ofp_queue_get_config_reply_header_end: label;
+			data: byte[length - offset(ofp_queue_get_config_reply_header_end)];
+
 	};
 	end_of_packet: label;
 }
