@@ -46,14 +46,11 @@ let features_reply x = match x with
 let stats_reply x = match x with 
 |`STATS_REPLY o ->
 	STATS_REPLY.prettyprint o;
-	let data_env = o#data_env in
-	while M.remaining data_env > 0 do
-		(* XXX: bad pattern: unmarshal respects base but ignores pos? *)
-		let env = M.env_at data_env (M.curpos data_env) (M.size data_env) in
-		let o = Openflow_desc_stats.unmarshal env in
-		M.skip data_env (M.curpos env);
-		Openflow_desc_stats.prettyprint o;
-	done
+	M.fold_env o#data_env
+		(fun env () ->
+			let o = Openflow_desc_stats.unmarshal env in
+			Openflow_desc_stats.prettyprint o;
+		) ()
 | _ -> failwith "Not a STATS_REPLY"
 
 let send f env fd = 
