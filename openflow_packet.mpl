@@ -101,7 +101,7 @@ packet openflow {
 
 			data: byte[length - offset(ofp_features_reply_header_end)];
 		| 7:"GET_CONFIG_REQUEST" ->
-			ofp_get_config_request_header_end: label;
+			();
 
 		| 8:"GET_CONFIG_REPLY" ->
 			flags: uint16 variant {
