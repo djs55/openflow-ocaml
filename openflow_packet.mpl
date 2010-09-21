@@ -158,7 +158,7 @@ packet openflow {
 			actions_start: label;
 			actions: byte[actions_len];
 			actions_end: label;
-			/* XXX */
+			data: byte[length - offset(actions_end)];
 		| 14:"FLOW_MOD" ->
 			ofp_match: byte[40]; /* openflow_match */
 			cookie: uint64;
