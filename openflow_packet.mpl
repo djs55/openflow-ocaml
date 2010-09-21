@@ -1,4 +1,5 @@
 #include "openflow_port_config.mpl"
+#include "openflow_phy_port_feature.mpl"
 
 /* OFP_PORT is a common 'type'. Note that Unknown values represent real
    ports */
@@ -179,7 +180,7 @@ packet openflow {
 			hw_addr: byte[6];
 			OFP_PORT_CONFIG(config);
 			OFP_PORT_CONFIG(mask);
-			advertise: uint32; /* ofp_port_feature */
+			OFP_PORT_FEATURE(advertise);
 			_pad: uint32;
 		| 16:"STATS_REQUEST" ->
 			req_ty: uint16 variant {
