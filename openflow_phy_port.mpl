@@ -1,5 +1,4 @@
 #include "openflow_port_config.mpl"
-#include "openflow_phy_port_feature.mpl"
 
 packet openflow_phy_port {
 	port_no: uint16;
@@ -15,8 +14,8 @@ packet openflow_phy_port {
 	unused_state1: bit[7];
 	link_down: bit[1];
 
-	OFP_PORT_FEATURE(curr);
-	OFP_PORT_FEATURE(advertised);
-	OFP_PORT_FEATURE(supported);
-	OFP_PORT_FEATURE(peer);
+	curr: packet openflow_phy_port_feature();
+	advertised: packet openflow_phy_port_feature();
+	supported: packet openflow_phy_port_feature();
+	peer: packet openflow_phy_port_feature();
 }

@@ -1,5 +1,4 @@
 #include "openflow_port_config.mpl"
-#include "openflow_phy_port_feature.mpl"
 
 /* OFP_PORT is a common 'type'. Note that Unknown values represent real
    ports */

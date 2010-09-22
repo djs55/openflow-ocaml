@@ -14,3 +14,6 @@
 	x##_10MB_FD: bit[1]; \
 	x##_10MB_HD: bit[1]	
 
+packet openflow_phy_port_feature{
+	OFP_PORT_FEATURE(feature);
+}

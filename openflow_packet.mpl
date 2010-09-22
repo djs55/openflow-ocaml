@@ -1,5 +1,4 @@
 #include "openflow_port_config.mpl"
-#include "openflow_phy_port_feature.mpl"
 
 packet openflow {
 	version: byte;
@@ -165,7 +164,7 @@ packet openflow {
 			hw_addr: byte[6];
 			OFP_PORT_CONFIG(config);
 			OFP_PORT_CONFIG(mask);
-			OFP_PORT_FEATURE(advertise);
+			advertise: packet openflow_phy_port_feature();
 			_pad: uint32;
 		| 16:"STATS_REQUEST" ->
 			req_ty: uint16 variant {
