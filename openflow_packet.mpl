@@ -153,7 +153,7 @@ packet openflow {
 			};
 			_pad: byte[7];
 			ofp_port_status_header_end: label;
-			phy_port: byte[length - offset(ofp_port_status_header_end)];
+			phy_port: packet openflow_phy_port();
 		| 13:"PACKET_OUT" ->
 			buffer_id: uint32;
 			OFP_PORT(in_port);
