@@ -18,10 +18,7 @@ test: openflow_port_config.cmx openflow_phy_port_feature.cmx openflow_port.cmx o
 test.cmx: openflow_port_config.cmi openflow_phy_port_feature.cmi openflow_port.cmi openflow_phy_port.cmi openflow_packet.cmi openflow_desc_stats.cmi openflow_match.cmi test.ml
 
 %.ml: %.mpl
-	cpp $< $<.2
-	cat $<.2 | grep -v '^#' > $<.3
-	$(MPLC) $<.3 > $@
-	rm -f $<.2 $<.3
+	$(MPLC) $< > $@
 
 %.mli: %.ml
 	$(OCAMLC) -i $< > $@ 
