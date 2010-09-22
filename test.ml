@@ -18,7 +18,8 @@ let hello env =
 	let (_: HELLO.o) = HELLO.t ~version:1 ~xid:0l ~data:(`Str "") env in ()
 
 let vendor env = 
-	let (_: VENDOR.o) = VENDOR.t ~version:1 ~xid:0l ~vendor:0l ~data:(`Str "") env in ()
+	let xensource_oui = 0x163el in (* an example *)
+	let (_: VENDOR.o) = VENDOR.t ~version:1 ~xid:0l ~vendor:xensource_oui ~data:(`Str "") env in ()
 
 let features_request env = 
 	let (_: FEATURES_REQUEST.o) = FEATURES_REQUEST.t ~version:1 ~xid:0l ~data:(`Str "") env in ()
