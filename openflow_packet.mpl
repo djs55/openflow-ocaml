@@ -1,4 +1,3 @@
-#include "openflow_port_config.mpl"
 
 packet openflow {
 	version: byte;
@@ -162,8 +161,8 @@ packet openflow {
  		| 15:"PORT_MOD" ->
 			port_no: packet openflow_port();
 			hw_addr: byte[6];
-			OFP_PORT_CONFIG(config);
-			OFP_PORT_CONFIG(mask);
+			config: packet openflow_port_config();
+			mask: packet openflow_port_config();
 			advertise: packet openflow_phy_port_feature();
 			_pad: uint32;
 		| 16:"STATS_REQUEST" ->

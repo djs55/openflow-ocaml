@@ -1,11 +1,10 @@
-#include "openflow_port_config.mpl"
 
 packet openflow_phy_port {
 	port_no: uint16;
 	hw_addr: byte[6];
 	name: byte[16];
 
-	OFP_PORT_CONFIG(config);
+	config: packet openflow_port_config();
 
 	unused_state3: byte[2];
 	unused_state2: bit[6];	

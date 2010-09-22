@@ -9,3 +9,6 @@
 	x##_no_stp: bit[1]; \
 	x##_port_down: bit[1]
 	
+packet openflow_port_config{
+	OFP_PORT_CONFIG(config);
+}

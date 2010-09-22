@@ -1,5 +1,3 @@
-#include "openflow_port_config.mpl"
-
 /* OFP_PORT is a common 'type'. Note that Unknown values represent real
    ports */
 #define OFP_PORT(x) x : uint16 variant { \
