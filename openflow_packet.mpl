@@ -1,21 +1,6 @@
 #include "openflow_port_config.mpl"
 #include "openflow_phy_port_feature.mpl"
 
-/* OFP_PORT is a common 'type'. Note that Unknown values represent real
-   ports */
-#define OFP_PORT(x) x : uint16 variant { \
-	| 0xff00 -> MAX \
-	| 0xfff8 -> IN_PORT \
-	| 0xfff9 -> TABLE \
-	| 0xfffa -> NORMAL \
-	| 0xfffb -> FLOOD \
-	| 0xfffc -> ALL \
-	| 0xfffd -> CONTROLLER \
-	| 0xfffe -> LOCAL \
-	| 0xffff -> NONE \
-}
-
-
 packet openflow {
 	version: byte;
 	ty: byte;
@@ -120,7 +105,7 @@ packet openflow {
 		| 10:"PACKET_IN" ->
 			buffer_id: uint32;
 			total_len: uint16;
-			OFP_PORT(in_port);
+			in_port: packet openflow_port();
 			reason: byte variant {
 				| 0 -> NO_MATCH
 				| 1 -> ACTION
@@ -156,7 +141,7 @@ packet openflow {
 			phy_port: packet openflow_phy_port();
 		| 13:"PACKET_OUT" ->
 			buffer_id: uint32;
-			OFP_PORT(in_port);
+			in_port: packet openflow_port();
 			actions_len: uint16 value(offset(actions_end)-offset(actions_start));
 			actions_start: label;
 			actions: byte[actions_len];
@@ -170,13 +155,13 @@ packet openflow {
 			hard_timeout: uint16;
 			priority: uint16;
 			buffer_id: uint32;
-			OFP_PORT(out_port);
+			out_port: packet openflow_port();
 			flags: uint16;
 			ofp_flow_mod_header_end: label;
 
 			data: byte[length - offset(ofp_flow_mod_header_end)];
  		| 15:"PORT_MOD" ->
-			OFP_PORT(port_no);
+			port_no: packet openflow_port();
 			hw_addr: byte[6];
 			OFP_PORT_CONFIG(config);
 			OFP_PORT_CONFIG(mask);
@@ -212,10 +197,10 @@ packet openflow {
 		| 19:"BARRIER_REPLY" ->
 			();
 		| 20:"QUEUE_GET_CONFIG_REQUEST" ->
-			OFP_PORT(port);
+			port: packet openflow_port();
 			_pad: uint16;
 		| 21:"QUEUE_GET_CONFIG_REPLY" ->
-			OFP_PORT(port);
+			port: packet openflow_port();
 			_pad: byte[6];
 			ofp_queue_get_config_reply_header_end: label;
 			data: byte[length - offset(ofp_queue_get_config_reply_header_end)];
