@@ -54,14 +54,19 @@ let stats_reply x = match x with
 | _ -> failwith "Not a STATS_REPLY"
 
 let send f env fd = 
-      M.reset env;
+      M.reset env;     
+      Printf.printf "send()\n"; flush stdout;
       f env;
-      M.flush env fd
+      M.flush env fd;
+      Printf.printf "  OK\n"; flush stdout
+
 
 let recv env fd handler = 
+      Printf.printf "recv()\n"; flush stdout;
       M.reset env;
       M.fill env fd;
       let o = unmarshal env in
+      Printf.printf "  OK\n"; flush stdout;
       handler o;
       o
 
@@ -71,16 +76,22 @@ let _ =
 
     with_switch "xenbr0"
     (fun fd ->
+      Printf.printf "HELLO\n"; flush stdout;
       send hello senv fd;
       ignore(recv env fd prettyprint);
+      Printf.printf "VENDOR\n"; flush stdout;
       send vendor senv fd;
       ignore(recv env fd prettyprint);
+      Printf.printf "FEATURES_REQUEST\n"; flush stdout;
       send features_request senv fd;
       ignore(recv env fd features_reply);
+      Printf.printf "GET_CONFIG_REQUEST\n"; flush stdout;
       send get_config_request senv fd;
       ignore(recv env fd prettyprint);
+      Printf.printf "STATS_REQUEST\n"; flush stdout;
       send stats_request senv fd;
       ignore(recv env fd stats_reply);
+      Printf.printf "SET_CONFIG\n"; flush stdout;
       send set_config senv fd;
       ignore(recv env fd prettyprint);
     )
