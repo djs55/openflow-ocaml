@@ -61,13 +61,16 @@ let send f env fd =
       M.flush env fd;
       Printf.printf "  OK\n"; flush stdout
 
-
+open Openflow_packet
 let recv env fd handler = 
       Printf.printf "recv()\n"; flush stdout;
       M.reset env;
       M.fill env fd;
       let o = unmarshal env in
-      Printf.printf "  OK\n"; flush stdout;
+	begin
+		Printf.printf "  %s\n" (match o with `ERROR _ -> "ERROR" | _ -> "OK");
+		flush stdout;
+	end;
       handler o;
       o
 
