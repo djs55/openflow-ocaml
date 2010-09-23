@@ -28,7 +28,7 @@ let get_config_request env =
 	let (_: GET_CONFIG_REQUEST.o) = GET_CONFIG_REQUEST.t ~version:1 ~xid:0l env in ()
 
 let set_config env = 
-	let (_: SET_CONFIG.o) = SET_CONFIG.t ~version:1 ~xid:0l ~flags:`NORMAL ~miss_send_len:0 env in ()
+	let (_: SET_CONFIG.o) = SET_CONFIG.t ~version:1 ~xid:0l ~reasm:0 ~drop:0 ~miss_send_len:0 env in ()
 
 let stats_request env = 
 	let (_: STATS_REQUEST.o) = STATS_REQUEST.t ~version:1 ~xid:0l ~req_ty:`DESCR env in ()

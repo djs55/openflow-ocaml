@@ -87,18 +87,14 @@ packet openflow {
 			();
 
 		| 8:"GET_CONFIG_REPLY" ->
-			flags: uint16 variant {
-				| 0 -> NORMAL
-				| 1 -> DROP
-				| 2 -> REASM
-			};
+			_pad: bit[14] const(0);
+			reasm: bit[1];
+			drop: bit[1];
 			miss_send_len: uint16;
 		| 9:"SET_CONFIG" ->
-			flags: uint16 variant {
-				| 0 -> NORMAL
-				| 1 -> DROP
-				| 2 -> REASM
-			};
+			_pad: bit[14] const(0);
+			reasm: bit[1];
+			drop: bit[1];
 			miss_send_len: uint16;
 		| 10:"PACKET_IN" ->
 			buffer_id: uint32;
