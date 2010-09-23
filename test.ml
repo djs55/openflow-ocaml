@@ -97,5 +97,9 @@ let _ =
       ignore(recv env fd stats_reply);
       Printf.printf "SET_CONFIG\n"; flush stdout;
       send set_config senv fd;
-      ignore(recv env fd prettyprint);
+      (* SET_CONFIG has no response. We make sure the connection hasn't lost
+	sync by sending any message which elicits a response. *)
+      send stats_request senv fd;
+      ignore(recv env fd stats_reply);
+      Printf.printf "Done\n";
     )
