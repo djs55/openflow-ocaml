@@ -109,7 +109,7 @@ packet openflow {
 
 			data: byte[length - offset(ofp_packet_in_header_end)];
 		| 11:"FLOW_REMOVED" ->
-			ofp_match: byte[40]; /* openflow_match */
+			ofp_match: packet openflow_match();
 			cookie: uint64;
 			priority: uint16;
 			reason: byte variant {
@@ -142,7 +142,7 @@ packet openflow {
 			actions_end: label;
 			data: byte[length - offset(actions_end)];
 		| 14:"FLOW_MOD" ->
-			ofp_match: byte[40]; /* openflow_match */
+			ofp_match: packet openflow_match();
 			cookie: uint64;
 			command: uint16 variant {
 				| 0 -> ADD
