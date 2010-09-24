@@ -144,13 +144,22 @@ packet openflow {
 		| 14:"FLOW_MOD" ->
 			ofp_match: byte[40]; /* openflow_match */
 			cookie: uint64;
-			command: uint16;
+			command: uint16 variant {
+				| 0 -> ADD
+				| 1 -> MODIFY
+				| 2 -> MODIFY_STRICT
+				| 3 -> DELETE
+				| 4 -> DELETE_STRICT
+			};
 			idle_timeout: uint16;
 			hard_timeout: uint16;
 			priority: uint16;
-			buffer_id: uint32;
+			buffer_id: uint32 default (-1);
 			out_port: packet openflow_port();
-			flags: uint16;
+			_pad: bit[13] const(0);
+			emerg: bit[1];
+			overlap: bit[1];
+			send_flow_rem: bit[1];
 			ofp_flow_mod_header_end: label;
 
 			data: byte[length - offset(ofp_flow_mod_header_end)];
