@@ -1,8 +1,8 @@
 
 /* 40 bytes long */
 packet openflow_match {
-	wildcards: uint32;
-	in_port: uint16;
+	wildcards: packet openflow_flow_wildcards ();
+	in_port: packet openflow_port ();
 	dl_src: byte[6];
 	dl_dst: byte[6];
 	dl_vlan: uint16;
