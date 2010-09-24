@@ -171,30 +171,103 @@ packet openflow {
 			advertise: packet openflow_phy_port_feature();
 			_pad: uint32;
 		| 16:"STATS_REQUEST" ->
-			req_ty: uint16 variant {
-				| 0 -> DESCR
-				| 1 -> FLOW
-				| 2 -> AGGREGATE
-				| 3 -> TABLE
-				| 4 -> PORT
-				| 5 -> QUEUE
-				| 0xffff -> VENDOR
-			};
+			request_ty: uint16;
 			flags: uint16 const(0);
-		| 17:"STATS_REPLY" ->
-			reply_ty: uint16 variant {
-				| 0 -> DESCR
-				| 1 -> FLOW
-				| 2 -> AGGREGATE
-				| 3 -> TABLE
-				| 4 -> PORT
-				| 5 -> QUEUE
-				| 0xffff -> VENDOR
+			classify (request_ty){
+				| 0:"DESCR" -> ();
+				| 1:"FLOW" ->
+					ofp_match: packet openflow_match();
+					table_id: byte variant {
+						| 0xff -> ALL
+					};
+					pad: byte default(0);
+					out_port: packet openflow_port(); 
+				| 2:"AGGREGATE" ->
+					ofp_match: packet openflow_match ();
+					table_id: byte variant {
+						| 0xfe -> EMERGENCY
+						| 0xff -> ALL
+					};
+					pad: byte const(0);
+					out_port: packet openflow_port();
+				| 3:"TABLE" -> ();
+				| 4:"PORT" ->
+					port_no: packet openflow_port();
+					pad: byte[6];
+				| 5:"QUEUE" ->
+					port_no: packet openflow_port();
+					pad: byte[2];
+					queue_id: uint32;
+				| 0xffff:"VENDOR" -> ();
+
 			};
-			_unused: bit[15];
+		| 17:"STATS_REPLY" ->
+			reply_ty: uint16;
+			_pad: bit[15] const(0);
 			more_to_follow: bit[1];
+			classify (reply_ty) {
+				| 0:"DESC" ->
+					mfr_desc: byte[256];
+					hw_desc: byte[256];
+					sw_desc: byte[256];
+					serial_num: byte[32];
+					dp_desc: byte[256];
+				| 1:"FLOW" ->
+					entry_length: uint16; /* XXX */
+					table_id: byte;
+					pad: byte default(0);
+					ofp_match: packet openflow_match();
+					duration_sec: uint32;
+					duration_nsec: uint32;
+					priority: uint16;
+					idle_timeout: uint16;
+					hard_timeout: uint16;
+					pad2: byte[6];
+					cookie: uint64;
+					packet_count: uint64;
+					byte_count: uint64;
+					action: packet openflow_action();
+				| 2:"AGGREGATE" ->
+					packet_count: uint64;
+					byte_count: uint64;
+					flow_count: uint32;
+					pad: byte[4];
+				| 3:"TABLE" ->
+					table_id: byte;
+					pad: byte[3];
+					name: byte[32];
+					wildcards: packet openflow_flow_wildcards();
+					max_entries: uint32;
+					active_count: uint32;
+					lookup_count: uint64;
+					matched_count: uint64;
+				| 4:"PORT" ->
+					port_no: uint16;
+					pad: byte[6];
+					rx_packets: uint64;
+					tx_packets: uint64;
+					rx_bytes: uint64;
+					tx_bytes: uint64;
+					rx_dropped: uint64;
+					tx_dropped: uint64;
+					rx_errors: uint64;
+					tx_errors: uint64;
+					rx_frame_err: uint64;
+					rx_over_err: uint64;
+					rx_crc_err: uint64;
+					collisions: uint64;
+				| 5:"QUEUE" ->
+					port_no: uint16;
+					pad: byte[2];
+					queue_id: uint32;
+					tx_bytes: uint64;
+					tx_packets: uint64;
+					tx_errors: uint64;
+				| 6:"VENDOR" ->
+					/* XXX vendor data */
+					();
+			};
 			ofp_stats_reply_header_end: label;
-			data: byte[length - offset(ofp_stats_reply_header_end)];
 		| 18:"BARRIER_REQUEST" ->
 			();
 		| 19:"BARRIER_REPLY" ->
