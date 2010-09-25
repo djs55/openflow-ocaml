@@ -7,11 +7,11 @@ packet openflow_match {
 	dl_dst: byte[6];
 	dl_vlan: uint16;
 	dl_vlan_pcp: byte;
-	_pad1: byte;
+	_pad1: byte default(0);
 	dl_type: uint16;
 	nw_tos: byte;
 	nw_proto: byte;
-	_pad2: byte[2];
+	_pad2: uint16 default(0);
 	nw_src: uint32;
 	nw_dst: uint32;
 	tp_src: uint16;
