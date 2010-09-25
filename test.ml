@@ -31,7 +31,7 @@ let set_config env =
 	let (_: SET_CONFIG.o) = SET_CONFIG.t ~version:1 ~xid:0l ~reasm:0 ~drop:0 ~miss_send_len:0 env in ()
 
 let stats_request env = 
-	let (_: STATS_REQUEST.o) = STATS_REQUEST.t ~version:1 ~xid:0l ~req_ty:`DESCR env in ()
+	let (_: STATS_REQUEST.DESCR.o) = STATS_REQUEST.DESCR.t ~version:1 ~xid:0l env in ()
 
 let features_reply x = match x with 
 |`FEATURES_REPLY o ->
@@ -45,13 +45,7 @@ let features_reply x = match x with
 | _ -> failwith "Not a FEATURES_REPLY"
 
 let stats_reply x = match x with 
-|`STATS_REPLY o ->
-	STATS_REPLY.prettyprint o;
-	M.fold_env o#data_env
-		(fun env () ->
-			let o = Openflow_desc_stats.unmarshal env in
-			Openflow_desc_stats.prettyprint o;
-		) ()
+|`STATS_REPLY o -> STATS_REPLY.prettyprint o;
 | _ -> failwith "Not a STATS_REPLY"
 
 let send f env fd = 
