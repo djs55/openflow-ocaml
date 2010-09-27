@@ -13,6 +13,20 @@ let with_switch name f =
 	)
     	(fun () -> Unix.close fd)
 
+(** No switch port *)
+let no_port = Openflow_port.t ~port:`NONE
+
+(** A flow match which matches all traffic *)
+let match_anything =
+	let no_port = Openflow_port.t ~port:`NONE in 
+	let wildcards = Openflow_flow_wildcards.t ~nw_tos:1 ~dl_vlan_pcp:1
+		~nw_dst:0b111111 ~nw_src:0b111111 ~tp_dst:1 ~tp_src:1 ~nw_proto:1
+		~dl_type:1 ~dl_dst:1 ~dl_src:1 ~dl_vlan:1 ~in_port:1 in
+	let eth = `Str(String.make 6 '\000') in
+	Openflow_match.t ~wildcards ~in_port:no_port
+		~dl_src:eth ~dl_dst:eth ~dl_vlan:0 ~dl_vlan_pcp:0 ~dl_type:0 
+		~nw_tos:0 ~nw_proto:0 ~nw_src:0l ~nw_dst:0l ~tp_src:0 ~tp_dst:0
+ 
 
 let hello env = 
 	let (_: HELLO.o) = HELLO.t ~version:1 ~xid:0l ~data:(`Str "") env in ()
@@ -34,17 +48,6 @@ let descr_stats_request env =
 	let (_: STATS_REQUEST.DESCR.o) = STATS_REQUEST.DESCR.t ~version:1 ~xid:0l env in ()
 
 let flow_stats_request env =
-	let no_port = Openflow_port.t ~port:`NONE in 
-	let match_anything =
-		let no_port = Openflow_port.t ~port:`NONE in 
-		let wildcards = Openflow_flow_wildcards.t ~nw_tos:1 ~dl_vlan_pcp:1
-			~nw_dst:0b111111 ~nw_src:0b111111 ~tp_dst:1 ~tp_src:1 ~nw_proto:1
-			~dl_type:1 ~dl_dst:1 ~dl_src:1 ~dl_vlan:1 ~in_port:1 in
-		let eth = `Str(String.make 6 '\000') in
-		Openflow_match.t ~wildcards ~in_port:no_port
-			~dl_src:eth ~dl_dst:eth ~dl_vlan:0 ~dl_vlan_pcp:0 ~dl_type:0 
-			~nw_tos:0 ~nw_proto:0 ~nw_src:0l ~nw_dst:0l ~tp_src:0 ~tp_dst:0 in
- 
 	let (_: STATS_REQUEST.FLOW.o) = STATS_REQUEST.FLOW.t ~version:1 ~xid:0l ~ofp_match:match_anything ~table_id:`ALL ~out_port:no_port env in ()
 
 
